@@ -44,8 +44,6 @@ describe("API Test", () => {
             })
             .expect(200)
             .expect((res) => {
-                res.body.length = 2;
-                res.body.email = "exemplo@email.com";
                 res.body.id = elementId;
                 res.body.email = "exemploatualizado@email.com";
               })
@@ -61,8 +59,8 @@ describe("API Test", () => {
           .expect("Content-Type", /json/)
           .expect(200)
           .expect((res) => {
-            res.body.data.length = 1;
-            res.body.data[0].email = "test@example.com";
+            res.body.length = 1;
+            res.body.email = "exemploatualizado@email.com";
           })
           .end((err, res) => {
             if (err) return done(err);
