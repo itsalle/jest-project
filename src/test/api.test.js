@@ -3,13 +3,16 @@ const app = require("../app");
 
 let elementId;
 
+//jest.useFakeTimers('legacy')
+jest.useRealTimers();
+
 describe("API Test", () => {
     test("GET /users/all", (done) => {
         request(app)
             .get("/users/all")
             .expect(200)
             .expect((res) => {
-                res.body.length !== 0;
+                expect(res.body.length).not.toBe(0);
             })
             .end((err, res) => {
                 if (err) return done(err);
@@ -18,7 +21,7 @@ describe("API Test", () => {
     });
 
     test("POST /users/create", (done) => {
-        request(app)
+         request(app)
             .post("/users/create")
             .expect("Content-Type", /json/)
             .send({
@@ -29,7 +32,7 @@ describe("API Test", () => {
             .expect(201)
             .end((err, res) => {
                 if (err) return done(err);
-                elementId = res.body.savedUser._id;
+                expect(elementId).toBe(res.body.savedUser._id);
                 return done();
             });
     });
@@ -44,13 +47,13 @@ describe("API Test", () => {
             })
             .expect(200)
             .expect((res) => {
-                res.body.id = elementId;
-                res.body.email = "exemploatualizado@email.com";
+                expect(res.body.savedUser._id).toBe(elementId);
+                expect(res.body.email).toBe("exemploatualizado@email.com");
               })
             .end((err, res) => {
-                if(err) return done(err);
-                return done;
-            })
+            if (err) return done(err);
+            return done();
+            });
     });
 
     test("DELETE /users/delete/:id", (done) => {
@@ -59,8 +62,8 @@ describe("API Test", () => {
           .expect("Content-Type", /json/)
           .expect(200)
           .expect((res) => {
-            res.body.length = 1;
-            res.body.email = "exemploatualizado@email.com";
+            expect(res.body.length).toBe(1);
+            expect(res.body.email).toBe("exemploatualizado@email.com");
           })
           .end((err, res) => {
             if (err) return done(err);
